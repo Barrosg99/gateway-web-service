@@ -13,6 +13,6 @@ async function bootstrap() {
 
   const url = serverUrl.replace('[::1]', 'localhost');
 
-  Logger.log(`🚀 Server is running on: ${url}`, 'API');
+  Logger.log(`🚀 Gateway is running on: ${url}`, 'API');
 }
 bootstrap();
