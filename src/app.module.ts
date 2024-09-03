@@ -14,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     GraphQLModule.forRoot<ApolloGatewayDriverConfig>({
       driver: ApolloGatewayDriver,
       server: {
+        introspection: true,
         playground: false,
         plugins: [ApolloServerPluginLandingPageLocalDefault()],
         context: ({ req }) => {
@@ -36,7 +37,10 @@ import { ConfigModule } from '@nestjs/config';
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
-          subgraphs: [{ name: 'users', url: 'http://localhost:3001/graphql' }],
+          subgraphs: [
+            { name: 'users', url: 'http://localhost:3001/graphql' },
+            { name: 'vehicles', url: 'http://localhost:3002/graphql' },
+          ],
         }),
         buildService: ({ url }) => {
           return new RemoteGraphQLDataSource({
