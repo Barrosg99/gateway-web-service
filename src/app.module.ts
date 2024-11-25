@@ -37,12 +37,20 @@ import { ConfigModule } from '@nestjs/config';
       },
       gateway: {
         supergraphSdl: new IntrospectAndCompose({
-          subgraphs: [
-            { name: 'users', url: 'http://localhost:3001/graphql' },
-            { name: 'vehicles', url: 'http://localhost:3002/graphql' },
-            { name: 'parking-stays', url: 'http://localhost:3003/graphql' },
-            { name: 'parking-payment', url: 'http://localhost:3004/graphql' },
-          ],
+          subgraphs: process.env.SUBGRAPHS
+            ? process.env.SUBGRAPHS.split(',').map((url) => {
+                const name = url.split(':')[1].split("//")[1];
+                return { name, url: `${url}/graphql` };
+              })
+            : [
+                { name: 'users', url: 'http://localhost:3001/graphql' },
+                { name: 'vehicles', url: 'http://localhost:3002/graphql' },
+                { name: 'parking-stays', url: 'http://localhost:3003/graphql' },
+                {
+                  name: 'parking-payment',
+                  url: 'http://localhost:3004/graphql',
+                },
+              ],
         }),
         buildService: ({ url }) => {
           return new RemoteGraphQLDataSource({
